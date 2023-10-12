@@ -31,6 +31,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var goalText: UILabel!
     
     @IBAction func onInput(_ sender: UISlider) {
+//        print(sender.value)
         goalText.text = "Goal: \(Int(sender.value) * 100) steps"
     }
     

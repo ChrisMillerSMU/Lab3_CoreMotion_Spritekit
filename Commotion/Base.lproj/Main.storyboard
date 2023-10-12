@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ktg-9z-yPf">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="22154" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="ktg-9z-yPf">
     <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21679"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -40,12 +40,6 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Goal: 1000 Steps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a9a-Ar-s4d">
-                                <rect key="frame" x="122.5" y="289" width="130" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XeX-UD-9V0">
                                 <rect key="frame" x="131" y="421" width="113" height="35"/>
                                 <state key="normal" title="Button"/>
@@ -54,24 +48,33 @@
                                     <segue destination="uAs-2Q-GOu" kind="show" id="n1S-rT-1ur"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Goal: 1000 Steps" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9t3-DR-LK4">
+                                <rect key="frame" x="16" y="289" width="343" height="21"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="343" id="5L7-wJ-wWp"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="Z1u-hz-r1E" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="1p1-Fm-I5i"/>
+                            <constraint firstItem="9t3-DR-LK4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1sF-L4-aFi"/>
                             <constraint firstItem="KYq-39-foA" firstAttribute="top" secondItem="y4k-Fy-Nyf" secondAttribute="bottom" constant="8" symbolic="YES" id="2Qr-OL-BqJ"/>
+                            <constraint firstItem="Z1u-hz-r1E" firstAttribute="top" secondItem="9t3-DR-LK4" secondAttribute="bottom" constant="8.5" id="3NY-2R-Htq"/>
                             <constraint firstItem="XeX-UD-9V0" firstAttribute="top" secondItem="KYq-39-foA" secondAttribute="bottom" constant="15.5" id="HbL-w7-jfs"/>
                             <constraint firstItem="Z1u-hz-r1E" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PDJ-aC-avd"/>
-                            <constraint firstItem="Z1u-hz-r1E" firstAttribute="top" secondItem="a9a-Ar-s4d" secondAttribute="bottom" constant="8.5" id="Ra4-DC-qB8"/>
                             <constraint firstItem="y4k-Fy-Nyf" firstAttribute="top" secondItem="Z1u-hz-r1E" secondAttribute="bottom" constant="7.5" id="fry-us-xIg"/>
                             <constraint firstItem="KYq-39-foA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kyt-W7-SFs"/>
                             <constraint firstItem="XeX-UD-9V0" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mgr-y7-Gbi"/>
-                            <constraint firstItem="a9a-Ar-s4d" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="tEz-lP-rbt"/>
                             <constraint firstItem="y4k-Fy-Nyf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wS6-6d-0S1"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="QU7-VQ-dXt"/>
                     <connections>
-                        <outlet property="goalText" destination="a9a-Ar-s4d" id="FRm-M7-Ope"/>
+                        <outlet property="goalText" destination="9t3-DR-LK4" id="eXz-Zf-bs3"/>
                         <outlet property="isWalking" destination="KYq-39-foA" id="Jtv-M3-ffl"/>
                         <outlet property="stepsLabel" destination="y4k-Fy-Nyf" id="saR-4n-TYT"/>
                         <outlet property="stepsSlider" destination="Z1u-hz-r1E" id="djv-At-LhT"/>
@@ -98,7 +101,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EJd-XG-b1a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="564" y="994.45277361319347"/>
+            <point key="canvasLocation" x="1503" y="1119"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="tUp-iC-jNU">
