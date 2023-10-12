@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
-                self.stepsSlider.setValue(newtotalSteps, animated: true)
+//                self.stepsSlider.setValue(newtotalSteps, animated: true)
                 self.stepsLabel.text = "Steps: \(newtotalSteps)"
             }
         }
@@ -28,6 +28,11 @@ class ViewController: UIViewController {
     @IBOutlet weak var stepsSlider: UISlider!
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var isWalking: UILabel!
+    @IBOutlet weak var goalText: UILabel!
+    
+    @IBAction func onInput(_ sender: UISlider) {
+        goalText.text = "Goal: \(Int(sender.value) * 100) steps"
+    }
     
     
     //MARK: =====View Lifecycle=====
@@ -91,9 +96,8 @@ class ViewController: UIViewController {
     func handlePedometer(_ pedData:CMPedometerData?, error:Error?)->(){
         if let steps = pedData?.numberOfSteps {
             self.totalSteps = steps.floatValue
+            self.stepsLabel.text = String(self.totalSteps)
         }
     }
-
-
 }
 
