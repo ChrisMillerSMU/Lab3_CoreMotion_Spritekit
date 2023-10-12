@@ -78,7 +78,7 @@ class ViewController: UIViewController {
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
-                self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)"
+                self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)\n Driving: \(unwrappedActivity.automotive)\n Cycling: \(unwrappedActivity.cycling)\n Running: \(unwrappedActivity.running)"
             }
         }
     }
@@ -100,4 +100,3 @@ class ViewController: UIViewController {
         }
     }
 }
-
