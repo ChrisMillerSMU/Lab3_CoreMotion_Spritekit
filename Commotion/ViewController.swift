@@ -85,11 +85,11 @@ class ViewController: UIViewController {
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
-//                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
-//                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "walking"
-//                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "running"
-//                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
-//                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "walking"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "running"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
             }
         }
     }
