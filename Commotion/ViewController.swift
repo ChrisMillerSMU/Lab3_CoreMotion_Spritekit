@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     let motion = CMMotionManager()
     let defaults = UserDefaults.standard
     
-    var goalSteps: Float = 1.0 {
+    var goalSteps: Float = 100.0 {
         didSet {
             updateStepsLeft()
         }
@@ -69,10 +69,10 @@ class ViewController: UIViewController {
         let goal = defaults.float(forKey: "goal")
         if(goal > 0.0){
             goalSteps = goal
-            goalSlider.value = goal
+            goalSlider.setValue(goal, animated: true)
         }
         else{
-            defaults.set(1.0, forKey:"goal")
+            defaults.set(100.0, forKey:"goal")
         }
     }
     
