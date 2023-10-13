@@ -65,14 +65,6 @@ class ViewController: UIViewController {
     //MARK: =====View Lifecycle=====
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
-        self.totalSteps = 0.0
-        self.startActivityMonitoring()
-        self.startPedometerMonitoring()
-        
-        goalSteps = max(defaults.float(forKey: "goal"), 100.0)
-        goalSlider.setValue(goalSteps / 100.0, animated: false)
-        updateStepsLeft()
         
         if let date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
             dayBefore = Calendar.current.startOfDay(for: date)
@@ -83,7 +75,14 @@ class ViewController: UIViewController {
         if let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
             endDate = Calendar.current.startOfDay(for: date)
         }
-        print(dayBefore, startDate, endDate)
+        
+        self.totalSteps = 0.0
+        self.startActivityMonitoring()
+        self.startPedometerMonitoring()
+        
+        goalSteps = max(defaults.float(forKey: "goal"), 100.0)
+        goalSlider.setValue(goalSteps / 100.0, animated: false)
+        updateStepsLeft()
     }
     
     // MARK: =====Activity Methods=====
