@@ -15,6 +15,11 @@ class ViewController: UIViewController {
     let activityManager = CMMotionActivityManager()
     let pedometer = CMPedometer()
     let motion = CMMotionManager()
+    var goalSteps: Float = 0.0 {
+        didSet {
+            updateStepsLeft()
+        }
+    }
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
@@ -22,16 +27,31 @@ class ViewController: UIViewController {
                 self.stepsLabel.text = "Steps: \(newtotalSteps)"
             }
         }
+        didSet{
+            updateStepsLeft()
+        }
     }
-    
+    func updateStepsLeft() {
+        let stepsLeft = goalSteps - totalSteps
+        print("left: ", stepsLeft)
+        print("Goal: ", goalSteps)
+        print("total: ", totalSteps)
+        DispatchQueue.main.async {
+            print("Updating steps left to: \(stepsLeft)") // Debug print statement
+            self.toGoSteps.text = "Steps Left: \(Int(stepsLeft))"
+            
+        }
+    }
     //MARK: =====UI Elements=====
     @IBOutlet weak var stepsSlider: UISlider!
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var isWalking: UILabel!
     @IBOutlet weak var goalText: UILabel!
     
+    @IBOutlet weak var toGoSteps: UILabel!
     @IBAction func onInput(_ sender: UISlider) {
 //        print(sender.value)
+        goalSteps = sender.value * 100
         goalText.text = "Goal: \(Int(sender.value) * 100) steps"
     }
     
@@ -94,10 +114,13 @@ class ViewController: UIViewController {
     }
     
     //ped handler
-    func handlePedometer(_ pedData:CMPedometerData?, error:Error?)->(){
+    func handlePedometer(_ pedData:CMPedometerData?, error:Error?) {
         if let steps = pedData?.numberOfSteps {
-            self.totalSteps = steps.floatValue
-            self.stepsLabel.text = String(self.totalSteps)
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.totalSteps = steps.floatValue
+                self.stepsLabel.text = String(self.totalSteps)
+            }
         }
     }
 }

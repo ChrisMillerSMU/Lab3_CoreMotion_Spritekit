@@ -4,6 +4,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22130"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -41,7 +42,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XeX-UD-9V0">
-                                <rect key="frame" x="131" y="421" width="113" height="35"/>
+                                <rect key="frame" x="131" y="421" width="113" height="68"/>
                                 <state key="normal" title="Button"/>
                                 <buttonConfiguration key="configuration" style="plain" title="Go to game"/>
                                 <connections>
@@ -57,6 +58,12 @@
                                 <color key="textColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6u-yJ-Ctc">
+                                <rect key="frame" x="130" y="578.5" width="138" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" systemColor="systemOrangeColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -64,11 +71,15 @@
                             <constraint firstItem="9t3-DR-LK4" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="1sF-L4-aFi"/>
                             <constraint firstItem="KYq-39-foA" firstAttribute="top" secondItem="y4k-Fy-Nyf" secondAttribute="bottom" constant="8" symbolic="YES" id="2Qr-OL-BqJ"/>
                             <constraint firstItem="Z1u-hz-r1E" firstAttribute="top" secondItem="9t3-DR-LK4" secondAttribute="bottom" constant="8.5" id="3NY-2R-Htq"/>
+                            <constraint firstItem="r6u-yJ-Ctc" firstAttribute="top" secondItem="XeX-UD-9V0" secondAttribute="bottom" constant="89.5" id="4u9-bk-pkf"/>
                             <constraint firstItem="XeX-UD-9V0" firstAttribute="top" secondItem="KYq-39-foA" secondAttribute="bottom" constant="15.5" id="HbL-w7-jfs"/>
                             <constraint firstItem="Z1u-hz-r1E" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="PDJ-aC-avd"/>
                             <constraint firstItem="y4k-Fy-Nyf" firstAttribute="top" secondItem="Z1u-hz-r1E" secondAttribute="bottom" constant="7.5" id="fry-us-xIg"/>
+                            <constraint firstItem="r6u-yJ-Ctc" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="114" id="g6h-Pg-RhG"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="r6u-yJ-Ctc" secondAttribute="bottom" constant="68" id="kiq-St-kvf"/>
                             <constraint firstItem="KYq-39-foA" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="kyt-W7-SFs"/>
                             <constraint firstItem="XeX-UD-9V0" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="mgr-y7-Gbi"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="r6u-yJ-Ctc" secondAttribute="trailing" constant="91" id="prr-DU-0HP"/>
                             <constraint firstItem="y4k-Fy-Nyf" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="wS6-6d-0S1"/>
                         </constraints>
                     </view>
@@ -78,6 +89,7 @@
                         <outlet property="isWalking" destination="KYq-39-foA" id="Jtv-M3-ffl"/>
                         <outlet property="stepsLabel" destination="y4k-Fy-Nyf" id="saR-4n-TYT"/>
                         <outlet property="stepsSlider" destination="Z1u-hz-r1E" id="djv-At-LhT"/>
+                        <outlet property="toGoSteps" destination="r6u-yJ-Ctc" id="e8G-hQ-Ed6"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -122,4 +134,9 @@
             <point key="canvasLocation" x="564" y="336.88155922038982"/>
         </scene>
     </scenes>
+    <resources>
+        <systemColor name="systemOrangeColor">
+            <color red="1" green="0.58431372549019611" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
 </document>
