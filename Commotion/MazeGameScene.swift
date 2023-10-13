@@ -14,8 +14,12 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
     //@IBOutlet weak var scoreLabel: UILabel!
     
+    let MAX_SPEED_X:CGFloat = 10
+    let MAX_SPEED_Y = 10
+    
     // MARK: Raw Motion Functions
     let motion = CMMotionManager()
+    
     func startMotionUpdates(){
         // some internal inconsistency here: we need to ask the device manager for device
         
@@ -32,15 +36,10 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: View Hierarchy Functions
-    let spinBlock = SKSpriteNode()
-    let scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-    var score:Int = 0 {
-        willSet(newValue){
-            DispatchQueue.main.async{
-                self.scoreLabel.text = "Score: \(newValue)"
-            }
-        }
-    }
+    let finishLine = SKSpriteNode()
+    let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
+    let player = SKSpriteNode(imageNamed: "larson") // this is our player
+    let winnerScreen = SKSpriteNode(imageNamed: "winnerScreen")
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -48,6 +47,7 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         // Set the background color using RGBA values
         backgroundColor = SKColor(red: 2/255.0, green: 255/255.0, blue: 254/255.0, alpha: 1.0)
         
+        self.levelLabel.text = "Level 1"
         // start motion for gravity
         self.startMotionUpdates()
         
@@ -57,19 +57,24 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.addScore()
         
         self.score = 0
+        self.addSidesAndTop()
+        self.addFinishAtPoint(CGPoint(x: size.width * 0.5, y: size.height * 0.35))
+        
+        self.createObstacleBlock(xPos: size.width * 0.2, yPos: size.height * 0.25)
+        
+        self.spawnPlayer()
+        
+        self.playWinSequence()
+        
+    }
+    
+    override func didEvaluateActions() {
+        if (self.physicsWorld.speed > MAX_SPEED_X) {
+            self.physicsWorld.speed = MAX_SPEED_X
+        }
     }
     
     // MARK: Create Sprites Functions
-    func addScore(){
-        
-        scoreLabel.text = "Score: 0"
-        scoreLabel.fontSize = 20
-        scoreLabel.fontColor = SKColor.blue
-        scoreLabel.position = CGPoint(x: frame.midX, y: frame.minY)
-        
-        addChild(scoreLabel)
-    }
-    
     func createObstacleBlock(xPos:Double, yPos:Double) {
         // Create obstacle sprite node
         let obstacleBlock = SKSpriteNode(imageNamed: "block") // this is literally a block
@@ -98,37 +103,45 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         obstacleBlock.physicsBody?.categoryBitMask = 0x00000001
     }
     
-    func addBlockAtPoint(_ point:CGPoint){
+    func addFinishAtPoint(_ point:CGPoint){
         
-        spinBlock.color = UIColor.red
-        spinBlock.size = CGSize(width:size.width*0.15,height:size.height * 0.05)
-        spinBlock.position = point
+        finishLine.color = UIColor.red
+        finishLine.size = CGSize(width:size.width*0.15,height:size.height * 0.05)
+        finishLine.position = point
         
-        spinBlock.physicsBody = SKPhysicsBody(rectangleOf:spinBlock.size)
-        spinBlock.physicsBody?.contactTestBitMask = 0x00000001
-        spinBlock.physicsBody?.collisionBitMask = 0x00000001
-        spinBlock.physicsBody?.categoryBitMask = 0x00000001
-        spinBlock.physicsBody?.isDynamic = false
-        spinBlock.physicsBody?.pinned = true
+        finishLine.physicsBody = SKPhysicsBody(rectangleOf:finishLine.size)
+        finishLine.physicsBody?.contactTestBitMask = 0x00000001
+        finishLine.physicsBody?.collisionBitMask = 0x00000001
+        finishLine.physicsBody?.categoryBitMask = 0x00000001
+        finishLine.physicsBody?.isDynamic = true
+        finishLine.physicsBody?.pinned = true
         
-        self.addChild(spinBlock)
+        self.addChild(finishLine)
 
     }
     
-    func addStaticBlockAtPoint(_ point:CGPoint){
-        let 🔲 = SKSpriteNode()
+    func spawnPlayer(){
+        player.size = CGSize(width:size.width*0.1,height:size.height * 0.1)
+
+        player.position = CGPoint(x: size.width * 0.3, y: size.height * 0.75)
         
-        🔲.color = UIColor.red
-        🔲.size = CGSize(width:size.width*0.1,height:size.height * 0.05)
-        🔲.position = point
+        player.physicsBody = SKPhysicsBody(rectangleOf:player.size)
+        player.physicsBody?.restitution = random(min: CGFloat(1.0), max: CGFloat(1.5))
+        player.physicsBody?.isDynamic = true
+        player.physicsBody?.contactTestBitMask = 0x00000001
+        player.physicsBody?.collisionBitMask = 0x00000001
+        player.physicsBody?.categoryBitMask = 0x00000001
         
-        🔲.physicsBody = SKPhysicsBody(rectangleOf:🔲.size)
-        🔲.physicsBody?.isDynamic = true
-        🔲.physicsBody?.pinned = true
-        🔲.physicsBody?.allowsRotation = true
-        
-        self.addChild(🔲)
-        
+        self.addChild(player)
+    }
+    
+    func playWinSequence() {
+        winnerScreen.size = CGSize(width: size.width, height: size.height)
+        winnerScreen.position = CGPoint(x: size.width * 0.3, y: size.height * 0.3)
+        winnerScreen.physicsBody = SKPhysicsBody(rectangleOf:winnerScreen.size)
+        winnerScreen.physicsBody?.isDynamic = true
+        winnerScreen.physicsBody?.pinned = true
+        winnerScreen.physicsBody?.allowsRotation = false
     }
     
     func addAllTheGameWalls() {
@@ -198,8 +211,8 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.node == spinBlock || contact.bodyB.node == spinBlock {
-            self.score += 1
+        if contact.bodyA.node == finishLine || contact.bodyB.node == finishLine {
+            playWinSequence()
         }
     }
     
