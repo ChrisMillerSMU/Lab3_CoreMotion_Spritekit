@@ -18,6 +18,7 @@ class ViewController: UIViewController {
     let defaults = UserDefaults.standard
     
     var goalSteps: Float = 100.0
+    var startDate:Date = Date()
     
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
@@ -71,11 +72,9 @@ class ViewController: UIViewController {
         goalSlider.setValue(goalSteps / 100.0, animated: false)
         updateStepsLeft()
         
-        var startDate:Date = Date()
         if let date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
             startDate = Calendar.current.startOfDay(for: date)
         }
-        print(Calendar.current.startOfDay(for: Date()), Date())
     }
     
     // MARK: =====Activity Methods=====
@@ -105,7 +104,7 @@ class ViewController: UIViewController {
     func startPedometerMonitoring(){
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.startUpdates(from: Date(),
+            pedometer.startUpdates(from: startDate,
                                    withHandler: handlePedometer)
         }
     }
