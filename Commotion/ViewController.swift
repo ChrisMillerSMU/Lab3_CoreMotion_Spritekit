@@ -15,11 +15,13 @@ class ViewController: UIViewController {
     let activityManager = CMMotionActivityManager()
     let pedometer = CMPedometer()
     let motion = CMMotionManager()
+    //sets up your step goal
     var goalSteps: Float = 0.0 {
         didSet {
             updateStepsLeft()
         }
     }
+    //sets up total steps you have taken
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
@@ -31,6 +33,8 @@ class ViewController: UIViewController {
             updateStepsLeft()
         }
     }
+    //updates the toGoSteps label with the current amount of steps
+    //you need to hit your "step goal"
     func updateStepsLeft() {
         let stepsLeft = goalSteps - totalSteps
         print("left: ", stepsLeft)
@@ -43,17 +47,20 @@ class ViewController: UIViewController {
         }
     }
     //MARK: =====UI Elements=====
+    //labels and slider for your step goal and current steps
     @IBOutlet weak var stepsSlider: UISlider!
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var goalText: UILabel!
-    
+    //labels for current activity
     @IBOutlet weak var isStill: UILabel!
     @IBOutlet weak var isWalking: UILabel!
     @IBOutlet weak var isRunning: UILabel!
     @IBOutlet weak var isCycling: UILabel!
     @IBOutlet weak var isDriving: UILabel!
-    
+    //label for steps left until goal
     @IBOutlet weak var toGoSteps: UILabel!
+    
+    //adjusts your step goal with slider input
     @IBAction func onInput(_ sender: UISlider) {
         goalSteps = Float(Int(sender.value)) * 100.0
         goalText.text = "Goal: \(Int(goalSteps)) steps"
@@ -83,6 +90,7 @@ class ViewController: UIViewController {
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
+                //gets current activity and displays what user is doing
                 self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
                 self.isWalking.text = "You are" + (unwrappedActivity.walking ? " " : " not ") + "walking"
                 self.isRunning.text = "You are" + (unwrappedActivity.running ? " " : " not ") + "running"
