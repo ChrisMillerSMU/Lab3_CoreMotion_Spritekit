@@ -26,57 +26,32 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
-        if let gravity = motionData?.gravity {
+        /*if let gravity = motionData?.gravity {
             self.physicsWorld.gravity = CGVector(dx: CGFloat(9.8*gravity.x), dy: CGFloat(9.8*gravity.y))
-        }
+        }*/
     }
     
     // MARK: View Hierarchy Functions
-    let spinBlock = SKSpriteNode()
-    let scoreLabel = SKLabelNode(fontNamed: "Chalkduster")
-    var score:Int = 0 {
-        willSet(newValue){
-            DispatchQueue.main.async{
-                self.scoreLabel.text = "Score: \(newValue)"
-            }
-        }
-    }
+    let finishLine = SKSpriteNode()
+    let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
         backgroundColor = SKColor.white
         
+        self.levelLabel.text = "Level 1"
         // start motion for gravity
         self.startMotionUpdates()
         
         // make sides to the screen
         self.addSidesAndTop()
+        self.addFinishAtPoint(CGPoint(x: size.width * 0.5, y: size.height * 0.35))
         
-        // add some stationary blocks
-        self.addStaticBlockAtPoint(CGPoint(x: size.width * 0.1, y: size.height * 0.25))
-        self.addStaticBlockAtPoint(CGPoint(x: size.width * 0.9, y: size.height * 0.25))
+        self.createObstacleBlock(xPos: size.width * 0.2, yPos: size.height * 0.25)
         
-        // add a spinning block
-        self.addBlockAtPoint(CGPoint(x: size.width * 0.5, y: size.height * 0.35))
-        
-        self.addSpriteBottle()
-        
-        self.addScore()
-        
-        self.score = 0
     }
     
     // MARK: Create Sprites Functions
-    func addScore(){
-        
-        scoreLabel.text = "Score: 0"
-        scoreLabel.fontSize = 20
-        scoreLabel.fontColor = SKColor.blue
-        scoreLabel.position = CGPoint(x: frame.midX, y: frame.minY)
-        
-        addChild(scoreLabel)
-    }
-    
     func createObstacleBlock(xPos:Double, yPos:Double) {
         // Create obstacle sprite node
         let obstacleBlock = SKSpriteNode(imageNamed: "block") // this is literally a block
@@ -105,36 +80,24 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         obstacleBlock.physicsBody?.categoryBitMask = 0x00000001
     }
     
-    func addBlockAtPoint(_ point:CGPoint){
+    func addFinishAtPoint(_ point:CGPoint){
         
-        spinBlock.color = UIColor.red
-        spinBlock.size = CGSize(width:size.width*0.15,height:size.height * 0.05)
-        spinBlock.position = point
+        finishLine.color = UIColor.red
+        finishLine.size = CGSize(width:size.width*0.15,height:size.height * 0.05)
+        finishLine.position = point
         
-        spinBlock.physicsBody = SKPhysicsBody(rectangleOf:spinBlock.size)
-        spinBlock.physicsBody?.contactTestBitMask = 0x00000001
-        spinBlock.physicsBody?.collisionBitMask = 0x00000001
-        spinBlock.physicsBody?.categoryBitMask = 0x00000001
-        spinBlock.physicsBody?.isDynamic = false
-        spinBlock.physicsBody?.pinned = true
+        finishLine.physicsBody = SKPhysicsBody(rectangleOf:finishLine.size)
+        finishLine.physicsBody?.contactTestBitMask = 0x00000001
+        finishLine.physicsBody?.collisionBitMask = 0x00000001
+        finishLine.physicsBody?.categoryBitMask = 0x00000001
+        finishLine.physicsBody?.isDynamic = true
+        finishLine.physicsBody?.pinned = true
         
-        self.addChild(spinBlock)
+        self.addChild(finishLine)
 
     }
     
-    func addStaticBlockAtPoint(_ point:CGPoint){
-        let 🔲 = SKSpriteNode()
-        
-        🔲.color = UIColor.red
-        🔲.size = CGSize(width:size.width*0.1,height:size.height * 0.05)
-        🔲.position = point
-        
-        🔲.physicsBody = SKPhysicsBody(rectangleOf:🔲.size)
-        🔲.physicsBody?.isDynamic = true
-        🔲.physicsBody?.pinned = true
-        🔲.physicsBody?.allowsRotation = true
-        
-        self.addChild(🔲)
+    func playWinSequence() {
         
     }
     
@@ -163,13 +126,9 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     // MARK: =====Delegate Functions=====
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.addSpriteBottle()
-    }
-    
     func didBegin(_ contact: SKPhysicsContact) {
-        if contact.bodyA.node == spinBlock || contact.bodyB.node == spinBlock {
-            self.score += 1
+        if contact.bodyA.node == finishLine || contact.bodyB.node == finishLine {
+            playWinSequence()
         }
     }
     
