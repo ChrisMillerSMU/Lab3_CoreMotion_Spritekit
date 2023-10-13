@@ -70,6 +70,12 @@ class ViewController: UIViewController {
         goalSteps = max(defaults.float(forKey: "goal"), 100.0)
         goalSlider.setValue(goalSteps / 100.0, animated: false)
         updateStepsLeft()
+        
+        var startDate:Date = Date()
+        if let date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
+            startDate = Calendar.current.startOfDay(for: date)
+        }
+        print(Calendar.current.startOfDay(for: Date()), Date())
     }
     
     // MARK: =====Activity Methods=====
