@@ -115,6 +115,7 @@ class ViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.totalSteps = steps.floatValue
+                print(steps.floatValue)
                 self.stepsLabel.text = String(self.totalSteps)
             }
         }
