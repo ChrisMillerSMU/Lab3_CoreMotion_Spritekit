@@ -32,6 +32,7 @@ class ViewController: UIViewController {
     func updateStepsLeft() {
         goalText.text = "Goal: \(Int(goalSteps)) steps"
         
+        progress.setProgress(totalSteps / goalSteps, animated: true)
         let stepsLeft = goalSteps - totalSteps
         DispatchQueue.main.async {
             self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
@@ -43,6 +44,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var goalSlider: UISlider!
     @IBOutlet weak var goalText: UILabel!
     @IBOutlet weak var toGoSteps: UILabel!
+    @IBOutlet weak var progress: UIProgressView!
     
     @IBOutlet weak var isStill: UILabel!
     @IBOutlet weak var isWalking: UILabel!

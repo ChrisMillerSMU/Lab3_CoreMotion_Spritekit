@@ -108,6 +108,7 @@
                         <outlet property="isRunning" destination="sUh-tH-Tfd" id="h1K-Oc-yCR"/>
                         <outlet property="isStill" destination="BQD-b4-ZtL" id="5zH-Wm-Eoa"/>
                         <outlet property="isWalking" destination="i67-ma-TRs" id="mDg-Q2-RgG"/>
+                        <outlet property="progress" destination="ilu-ve-VJe" id="6UX-o2-gBf"/>
                         <outlet property="stepsLabel" destination="y4k-Fy-Nyf" id="saR-4n-TYT"/>
                         <outlet property="stepsSlider" destination="Z1u-hz-r1E" id="djv-At-LhT"/>
                         <outlet property="toGoSteps" destination="r6u-yJ-Ctc" id="e8G-hQ-Ed6"/>
