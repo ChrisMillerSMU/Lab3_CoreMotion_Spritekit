@@ -86,10 +86,10 @@ class ViewController: UIViewController {
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
                 self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
-                self.isStill.text = "\(unwrappedActivity.walking) You are" + (unwrappedActivity.walking ? " " : " not ") + "walking"
-                self.isStill.text = "You are" + (unwrappedActivity.running ? " " : " not ") + "running"
-                self.isStill.text = "You are" + (unwrappedActivity.cycling ? " " : " not ") + "cycling"
-                self.isStill.text = "You are" + (unwrappedActivity.automotive ? " " : " not ") + "driving"
+                self.isWalking.text = "You are" + (unwrappedActivity.walking ? " " : " not ") + "walking"
+                self.isRunning.text = "You are" + (unwrappedActivity.running ? " " : " not ") + "running"
+                self.isCycling.text = "You are" + (unwrappedActivity.cycling ? " " : " not ") + "cycling"
+                self.isDriving.text = "You are" + (unwrappedActivity.automotive ? " " : " not ") + "driving"
                 
                 self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)\n Driving: \(unwrappedActivity.automotive)\n Cycling: \(unwrappedActivity.cycling)\n Running: \(unwrappedActivity.running)"
             }
