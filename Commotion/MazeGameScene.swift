@@ -14,8 +14,12 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
     //@IBOutlet weak var scoreLabel: UILabel!
     
+    let MAX_SPEED_X:CGFloat = 10
+    let MAX_SPEED_Y = 10
+    
     // MARK: Raw Motion Functions
     let motion = CMMotionManager()
+    
     func startMotionUpdates(){
         // some internal inconsistency here: we need to ask the device manager for device
         
@@ -26,14 +30,15 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
-        /*if let gravity = motionData?.gravity {
-            self.physicsWorld.gravity = CGVector(dx: CGFloat(9.8*gravity.x), dy: CGFloat(9.8*gravity.y))
-        }*/
+        if let gravity = motionData?.gravity {
+            self.physicsWorld.gravity = CGVector(dx: CGFloat(0.001*gravity.x), dy: CGFloat(0.001*gravity.y))
+        }
     }
     
     // MARK: View Hierarchy Functions
     let finishLine = SKSpriteNode()
     let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
+    let player = SKSpriteNode(imageNamed: "larson") // this is our player
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -49,6 +54,14 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         
         self.createObstacleBlock(xPos: size.width * 0.2, yPos: size.height * 0.25)
         
+        self.spawnPlayer()
+        
+    }
+    
+    override func didEvaluateActions() {
+        if (self.physicsWorld.speed > MAX_SPEED_X) {
+            self.physicsWorld.speed = MAX_SPEED_X
+        }
     }
     
     // MARK: Create Sprites Functions
@@ -95,6 +108,21 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         
         self.addChild(finishLine)
 
+    }
+    
+    func spawnPlayer(){
+        player.size = CGSize(width:size.width*0.1,height:size.height * 0.1)
+
+        player.position = CGPoint(x: size.width * 0.3, y: size.height * 0.75)
+        
+        player.physicsBody = SKPhysicsBody(rectangleOf:player.size)
+        player.physicsBody?.restitution = random(min: CGFloat(1.0), max: CGFloat(1.5))
+        player.physicsBody?.isDynamic = true
+        player.physicsBody?.contactTestBitMask = 0x00000001
+        player.physicsBody?.collisionBitMask = 0x00000001
+        player.physicsBody?.categoryBitMask = 0x00000001
+        
+        self.addChild(player)
     }
     
     func playWinSequence() {
