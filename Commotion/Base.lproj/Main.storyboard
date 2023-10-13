@@ -20,7 +20,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Z1u-hz-r1E">
+                            <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="1" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Z1u-hz-r1E">
                                 <rect key="frame" x="14" y="318.5" width="347" height="31"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <connections>
@@ -103,6 +103,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="QU7-VQ-dXt"/>
                     <connections>
+                        <outlet property="goalSlider" destination="Z1u-hz-r1E" id="7Ie-KE-goc"/>
                         <outlet property="goalText" destination="9t3-DR-LK4" id="eXz-Zf-bs3"/>
                         <outlet property="isCycling" destination="kID-Ht-2Zv" id="G3w-un-X6o"/>
                         <outlet property="isDriving" destination="sZf-hr-qLq" id="4rh-ld-EaY"/>

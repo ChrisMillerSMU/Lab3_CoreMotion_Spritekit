@@ -15,7 +15,9 @@ class ViewController: UIViewController {
     let activityManager = CMMotionActivityManager()
     let pedometer = CMPedometer()
     let motion = CMMotionManager()
-    var goalSteps: Float = 0.0 {
+    let defaults = UserDefaults.standard
+    
+    var goalSteps: Float = 1.0 {
         didSet {
             updateStepsLeft()
         }
@@ -23,7 +25,6 @@ class ViewController: UIViewController {
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
-//                self.stepsSlider.setValue(newtotalSteps, animated: true)
                 self.stepsLabel.text = "Steps: \(newtotalSteps)"
             }
         }
@@ -33,18 +34,14 @@ class ViewController: UIViewController {
     }
     func updateStepsLeft() {
         let stepsLeft = goalSteps - totalSteps
-        print("left: ", stepsLeft)
-        print("Goal: ", goalSteps)
-        print("total: ", totalSteps)
         DispatchQueue.main.async {
-            print("Updating steps left to: \(stepsLeft)") // Debug print statement
-            self.toGoSteps.text = "Steps Left: \(Int(stepsLeft))"
-            
+            self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
         }
     }
     //MARK: =====UI Elements=====
     @IBOutlet weak var stepsSlider: UISlider!
     @IBOutlet weak var stepsLabel: UILabel!
+    @IBOutlet weak var goalSlider: UISlider!
     @IBOutlet weak var goalText: UILabel!
     
     @IBOutlet weak var isStill: UILabel!
@@ -56,6 +53,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var toGoSteps: UILabel!
     @IBAction func onInput(_ sender: UISlider) {
         goalSteps = Float(Int(sender.value)) * 100.0
+        defaults.set(goalSteps, forKey:"goal")
         goalText.text = "Goal: \(Int(goalSteps)) steps"
     }
     
@@ -67,6 +65,15 @@ class ViewController: UIViewController {
         self.totalSteps = 0.0
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
+        
+        let goal = defaults.float(forKey: "goal")
+        if(goal > 0.0){
+            goalSteps = goal
+            goalSlider.value = goal
+        }
+        else{
+            defaults.set(1.0, forKey:"goal")
+        }
     }
     
     // MARK: =====Activity Methods=====
