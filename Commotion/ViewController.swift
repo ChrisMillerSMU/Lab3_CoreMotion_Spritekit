@@ -83,6 +83,7 @@ class ViewController: UIViewController {
         if let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
             endDate = Calendar.current.startOfDay(for: date)
         }
+        print(dayBefore, startDate, endDate)
     }
     
     // MARK: =====Activity Methods=====
@@ -112,8 +113,6 @@ class ViewController: UIViewController {
     func startPedometerMonitoring(){
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.startUpdates(from: startDate,
-                                   withHandler: handlePedometer)
             pedometer.queryPedometerData(from: dayBefore, to: startDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
