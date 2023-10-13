@@ -18,7 +18,9 @@ class ViewController: UIViewController {
     let defaults = UserDefaults.standard
     
     var goalSteps: Float = 100.0
+    var dayBefore:Date = Date()
     var startDate:Date = Date()
+    var endDate:Date = Date()
     
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
@@ -73,7 +75,13 @@ class ViewController: UIViewController {
         updateStepsLeft()
         
         if let date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
+            dayBefore = Calendar.current.startOfDay(for: date)
+        }
+        if let date = Calendar.current.date(byAdding: .day, value: 0, to: Date()) {
             startDate = Calendar.current.startOfDay(for: date)
+        }
+        if let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
+            endDate = Calendar.current.startOfDay(for: date)
         }
     }
     
@@ -106,6 +114,9 @@ class ViewController: UIViewController {
         if CMPedometer.isStepCountingAvailable(){
             pedometer.startUpdates(from: startDate,
                                    withHandler: handlePedometer)
+            pedometer.queryPedometerData(from: dayBefore, to: startDate) {
+                [weak self] (data, error) in self?.handlePedometer(data, error: error)
+            }
         }
     }
     
@@ -115,7 +126,6 @@ class ViewController: UIViewController {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.totalSteps = steps.floatValue
-                print(steps.floatValue)
                 self.stepsLabel.text = String(self.totalSteps)
             }
         }
