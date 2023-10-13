@@ -17,11 +17,8 @@ class ViewController: UIViewController {
     let motion = CMMotionManager()
     let defaults = UserDefaults.standard
     
-    var goalSteps: Float = 100.0 {
-        didSet {
-            updateStepsLeft()
-        }
-    }
+    var goalSteps: Float = 100.0
+    
     var totalSteps: Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
@@ -33,6 +30,8 @@ class ViewController: UIViewController {
         }
     }
     func updateStepsLeft() {
+        goalText.text = "Goal: \(Int(goalSteps)) steps"
+        
         let stepsLeft = goalSteps - totalSteps
         DispatchQueue.main.async {
             self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
@@ -43,6 +42,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var stepsLabel: UILabel!
     @IBOutlet weak var goalSlider: UISlider!
     @IBOutlet weak var goalText: UILabel!
+    @IBOutlet weak var toGoSteps: UILabel!
     
     @IBOutlet weak var isStill: UILabel!
     @IBOutlet weak var isWalking: UILabel!
@@ -50,11 +50,10 @@ class ViewController: UIViewController {
     @IBOutlet weak var isCycling: UILabel!
     @IBOutlet weak var isDriving: UILabel!
     
-    @IBOutlet weak var toGoSteps: UILabel!
     @IBAction func onInput(_ sender: UISlider) {
         goalSteps = Float(Int(sender.value)) * 100.0
         defaults.set(goalSteps, forKey:"goal")
-        goalText.text = "Goal: \(Int(goalSteps)) steps"
+        updateStepsLeft()
     }
     
     
@@ -66,14 +65,9 @@ class ViewController: UIViewController {
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
         
-        let goal = defaults.float(forKey: "goal")
-        if(goal > 0.0){
-            goalSteps = goal
-            goalSlider.setValue(goal, animated: true)
-        }
-        else{
-            defaults.set(100.0, forKey:"goal")
-        }
+        goalSteps = max(defaults.float(forKey: "goal"), 100.0)
+        goalSlider.setValue(goalSteps / 100.0, animated: false)
+        updateStepsLeft()
     }
     
     // MARK: =====Activity Methods=====
