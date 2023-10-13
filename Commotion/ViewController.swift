@@ -45,8 +45,13 @@ class ViewController: UIViewController {
     //MARK: =====UI Elements=====
     @IBOutlet weak var stepsSlider: UISlider!
     @IBOutlet weak var stepsLabel: UILabel!
-    @IBOutlet weak var isWalking: UILabel!
     @IBOutlet weak var goalText: UILabel!
+    
+    @IBOutlet weak var isStill: UILabel!
+    @IBOutlet weak var isWalking: UILabel!
+    @IBOutlet weak var isRunning: UILabel!
+    @IBOutlet weak var isCycling: UILabel!
+    @IBOutlet weak var isDriving: UILabel!
     
     @IBOutlet weak var toGoSteps: UILabel!
     @IBAction func onInput(_ sender: UISlider) {
@@ -62,6 +67,8 @@ class ViewController: UIViewController {
         self.totalSteps = 0.0
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
+        
+//        self.isWalking.text = "Walking: \n Still: \n Driving: \n Cycling: \n Running: "
     }
     
     // MARK: =====Activity Methods=====
@@ -78,7 +85,11 @@ class ViewController: UIViewController {
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
-                self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)\n Driving: \(unwrappedActivity.automotive)\n Cycling: \(unwrappedActivity.cycling)\n Running: \(unwrappedActivity.running)"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "walking"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "running"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
+                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
             }
         }
     }
