@@ -67,8 +67,6 @@ class ViewController: UIViewController {
         self.totalSteps = 0.0
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
-        
-//        self.isWalking.text = "Walking: \n Still: \n Driving: \n Cycling: \n Running: "
     }
     
     // MARK: =====Activity Methods=====
@@ -90,8 +88,6 @@ class ViewController: UIViewController {
                 self.isRunning.text = "You are" + (unwrappedActivity.running ? " " : " not ") + "running"
                 self.isCycling.text = "You are" + (unwrappedActivity.cycling ? " " : " not ") + "cycling"
                 self.isDriving.text = "You are" + (unwrappedActivity.automotive ? " " : " not ") + "driving"
-                
-                self.isWalking.text = "Walking: \(unwrappedActivity.walking)\n Still: \(unwrappedActivity.stationary)\n Driving: \(unwrappedActivity.automotive)\n Cycling: \(unwrappedActivity.cycling)\n Running: \(unwrappedActivity.running)"
             }
         }
     }
