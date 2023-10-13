@@ -39,6 +39,7 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     let finishLine = SKSpriteNode()
     let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
     let player = SKSpriteNode(imageNamed: "larson") // this is our player
+    let winnerScreen = SKSpriteNode(imageNamed: "winnerScreen")
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
@@ -55,6 +56,8 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.createObstacleBlock(xPos: size.width * 0.2, yPos: size.height * 0.25)
         
         self.spawnPlayer()
+        
+        self.playWinSequence()
         
     }
     
@@ -126,7 +129,12 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     func playWinSequence() {
-        
+        winnerScreen.size = CGSize(width: size.width, height: size.height)
+        winnerScreen.position = CGPoint(x: size.width * 0.3, y: size.height * 0.3)
+        winnerScreen.physicsBody = SKPhysicsBody(rectangleOf:winnerScreen.size)
+        winnerScreen.physicsBody?.isDynamic = true
+        winnerScreen.physicsBody?.pinned = true
+        winnerScreen.physicsBody?.allowsRotation = false
     }
     
     func addSidesAndTop(){

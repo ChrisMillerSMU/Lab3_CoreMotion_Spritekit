@@ -95,13 +95,19 @@
                     <view key="view" contentMode="scaleToFill" id="9m8-Lp-cfY" customClass="SKView">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KcS-02-jrh">
+                                <rect key="frame" x="0.0" y="72" width="375" height="595"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            </imageView>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="Liu-mM-cYI"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EJd-XG-b1a" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1503" y="1119"/>
+            <point key="canvasLocation" x="1501.5999999999999" y="1118.5907046476761"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="tUp-iC-jNU">

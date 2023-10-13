@@ -27,6 +27,7 @@ class GameViewController: UIViewController {
     }
 
     
+    @IBOutlet weak var backgroundImage: UIImageView!
     
     override var prefersStatusBarHidden : Bool {
         return true
