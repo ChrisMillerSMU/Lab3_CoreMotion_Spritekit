@@ -62,26 +62,6 @@ class ViewController: UIViewController {
         self.totalSteps = 0.0
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
-        self.startMotionUpdates()
-    }
-    
-    
-    // MARK: =====Raw Motion Functions=====
-    func startMotionUpdates(){
-        // some internal inconsistency here: we need to ask the device manager for device 
-        
-        // TODO: should we be doing this from the MAIN queue? You will need to fix that!!!....
-        if self.motion.isDeviceMotionAvailable{
-            self.motion.startDeviceMotionUpdates(to: OperationQueue.main,
-                                                 withHandler: self.handleMotion)
-        }
-    }
-    
-    func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
-        if let gravity = motionData?.gravity {
-            let rotation = atan2(gravity.x, gravity.y) - Double.pi
-            self.isWalking.transform = CGAffineTransform(rotationAngle: CGFloat(rotation))
-        }
     }
     
     // MARK: =====Activity Methods=====
