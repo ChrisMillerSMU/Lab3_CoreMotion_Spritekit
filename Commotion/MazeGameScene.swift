@@ -14,8 +14,7 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
     //@IBOutlet weak var scoreLabel: UILabel!
     
-    let MAX_SPEED_X:CGFloat = 10
-    let MAX_SPEED_Y = 10
+    let MAX_SPEED_X:CGFloat = 1
     
     // MARK: Raw Motion Functions
     let motion = CMMotionManager()
@@ -31,33 +30,44 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     
     func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
         if let gravity = motionData?.gravity {
-            self.physicsWorld.gravity = CGVector(dx: CGFloat(0.001*gravity.x), dy: CGFloat(0.001*gravity.y))
+            self.physicsWorld.gravity = CGVector(dx: CGFloat(gravity.x), dy: CGFloat(gravity.y))
         }
     }
     
     // MARK: View Hierarchy Functions
     let finishLine = SKSpriteNode()
+    
+    let topWall = SKSpriteNode()
+    let bottomWall = SKSpriteNode()
+    let leftWall = SKSpriteNode()
+    let rightWall = SKSpriteNode()
+    
+    let bottomInnerWall = SKSpriteNode()
+    let middleInnerWall = SKSpriteNode()
+    let topInnerWall = SKSpriteNode()
+    
     let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
     let player = SKSpriteNode(imageNamed: "larson") // this is our player
-    let winnerScreen = SKSpriteNode(imageNamed: "winnerScreen")
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-        backgroundColor = SKColor.white
+        
+        // Set the background color using RGBA values
+        backgroundColor = SKColor(red: 2/255.0, green: 255/255.0, blue: 254/255.0, alpha: 1.0)
         
         self.levelLabel.text = "Level 1"
         // start motion for gravity
         self.startMotionUpdates()
         
         // make sides to the screen
-        self.addSidesAndTop()
-        self.addFinishAtPoint(CGPoint(x: size.width * 0.5, y: size.height * 0.35))
-        
-        self.createObstacleBlock(xPos: size.width * 0.2, yPos: size.height * 0.25)
+        self.addFinishAtPoint(CGPoint(x: size.width * 0.25, y: size.height * 0.85))
         
         self.spawnPlayer()
+        self.addAllTheGameWalls()
         
-        self.playWinSequence()
+        let timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { timer in
+            self.playWinSequence()
+        }
         
     }
     
@@ -99,7 +109,7 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     func addFinishAtPoint(_ point:CGPoint){
         
         finishLine.color = UIColor.red
-        finishLine.size = CGSize(width:size.width*0.15,height:size.height * 0.05)
+        finishLine.size = CGSize(width:size.width*0.05,height:size.height * 0.11)
         finishLine.position = point
         
         finishLine.physicsBody = SKPhysicsBody(rectangleOf:finishLine.size)
@@ -113,13 +123,14 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
-    func spawnPlayer(){
-        player.size = CGSize(width:size.width*0.1,height:size.height * 0.1)
+    func spawnPlayer() {
+        player.size = CGSize(width:size.width*0.1,height:size.width*0.1)
 
-        player.position = CGPoint(x: size.width * 0.3, y: size.height * 0.75)
+        player.position = CGPoint(x: size.width * 0.30, y: size.height * 0.15)
         
         player.physicsBody = SKPhysicsBody(rectangleOf:player.size)
-        player.physicsBody?.restitution = random(min: CGFloat(1.0), max: CGFloat(1.5))
+        player.physicsBody?.restitution = 0.01
+        player.physicsBody?.linearDamping = 35
         player.physicsBody?.isDynamic = true
         player.physicsBody?.contactTestBitMask = 0x00000001
         player.physicsBody?.collisionBitMask = 0x00000001
@@ -128,43 +139,127 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player)
     }
     
-    func playWinSequence() {
-        winnerScreen.size = CGSize(width: size.width, height: size.height)
-        winnerScreen.position = CGPoint(x: size.width * 0.3, y: size.height * 0.3)
-        winnerScreen.physicsBody = SKPhysicsBody(rectangleOf:winnerScreen.size)
-        winnerScreen.physicsBody?.isDynamic = true
-        winnerScreen.physicsBody?.pinned = true
-        winnerScreen.physicsBody?.allowsRotation = false
+    // Code to remove the player node from the game
+    func deletePlayer() {
+        self.player.removeFromParent()
     }
     
-    func addSidesAndTop(){
-        let left = SKSpriteNode()
-        let right = SKSpriteNode()
-        let top = SKSpriteNode()
+    func playWinSequence() {
+        deletePlayer()
+        deleteWallsAndFinish()
         
-        left.size = CGSize(width:size.width*0.1,height:size.height)
-        left.position = CGPoint(x:0, y:size.height*0.5)
+        backgroundColor = .black
         
-        right.size = CGSize(width:size.width*0.1,height:size.height)
-        right.position = CGPoint(x:size.width, y:size.height*0.5)
+        let scaleUpAction = SKAction.scale(to: 4.0, duration: 0.05) // Scale up to 2x in 0.5 seconds
         
-        top.size = CGSize(width:size.width,height:size.height*0.1)
-        top.position = CGPoint(x:size.width*0.5, y:size.height)
         
-        for obj in [left,right,top]{
-            obj.color = UIColor.red
-            obj.physicsBody = SKPhysicsBody(rectangleOf:obj.size)
-            obj.physicsBody?.isDynamic = true
-            obj.physicsBody?.pinned = true
-            obj.physicsBody?.allowsRotation = false
-            self.addChild(obj)
+        let scaleDownAction = SKAction.scale(to: 2.0, duration: 0.5) // Scale back to original size in 0.1 seconds
+        
+        
+        let backgroundImage = SKSpriteNode(imageNamed: "winnerScreen")
+        backgroundImage.position = CGPoint(x: size.width / 2, y: size.height / 2)
+        backgroundImage.xScale = 2.0 // Increase the width by a factor of 2
+        backgroundImage.yScale = 2.0 // Increase the height by a factor of 2
+        self.addChild(backgroundImage)
+        
+        backgroundImage.run(scaleUpAction) {
+            backgroundImage.run(scaleDownAction)
         }
     }
     
+    func addAllTheGameWalls() {
+        // Dimensions for the maze walls
+        let wallThickness = CGFloat(80)  // Wall thickness for most walls
+        let horizontalWallThickness = CGFloat(60)  // The wall thickness for horizontal walls
+
+        // Top wall
+        topWall.size = CGSize(width: size.width, height: wallThickness)
+        topWall.position = CGPoint(x: size.width / 2, y: size.height - wallThickness / 2)
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        topWall.physicsBody?.isDynamic = false
+        self.addChild(topWall)
+
+        // Bottom wall
+        bottomWall.color = .black
+        bottomWall.size = CGSize(width: size.width, height: wallThickness)
+        bottomWall.position = CGPoint(x: size.width / 2, y: wallThickness / 2)
+        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: bottomWall.size)
+        bottomWall.physicsBody?.isDynamic = false
+        self.addChild(bottomWall)
+
+        // Left wall
+        leftWall.color = .black
+        leftWall.size = CGSize(width: wallThickness, height: size.height)
+        leftWall.position = CGPoint(x: wallThickness / 2, y: size.height / 2)
+        leftWall.physicsBody = SKPhysicsBody(rectangleOf: leftWall.size)
+        leftWall.physicsBody?.isDynamic = false
+        self.addChild(leftWall)
+
+        // Right wall
+        rightWall.color = .black
+        rightWall.size = CGSize(width: wallThickness, height: size.height)
+        rightWall.position = CGPoint(x: size.width - wallThickness / 2, y: size.height / 2)
+        rightWall.physicsBody = SKPhysicsBody(rectangleOf: rightWall.size)
+        rightWall.physicsBody?.isDynamic = false
+        self.addChild(rightWall)
+        
+        // Sizes for inner all passages
+        let horizontalWallThicknessThin = CGFloat(20) // Thin wall
+
+        // First (bottom) horizontal inner wall
+        let bottomInnerWallLength = size.width * 0.4
+        bottomInnerWall.color = .black
+        bottomInnerWall.size = CGSize(width: bottomInnerWallLength, height: horizontalWallThickness)
+        bottomInnerWall.position = CGPoint(x: bottomInnerWallLength / 2, y: size.height * 0.25)
+        bottomInnerWall.physicsBody = SKPhysicsBody(rectangleOf: bottomInnerWall.size)
+        bottomInnerWall.physicsBody?.isDynamic = false
+        self.addChild(bottomInnerWall)
+        
+        // Second (middle) horizontal inner wall
+        let middleInnerWallLength = size.width * 0.5
+        middleInnerWall.color = .black
+        middleInnerWall.size = CGSize(width: middleInnerWallLength, height: horizontalWallThicknessThin)
+        middleInnerWall.position = CGPoint(x: size.width - middleInnerWallLength / 2, y: size.height * 0.5)
+        middleInnerWall.physicsBody = SKPhysicsBody(rectangleOf: middleInnerWall.size)
+        middleInnerWall.physicsBody?.isDynamic = false
+        self.addChild(middleInnerWall)
+        
+        // Third (top) horizontal inner wall
+        let topInnerWallLength = size.width * 0.6
+        topInnerWall.color = .black
+        topInnerWall.size = CGSize(width: topInnerWallLength, height: horizontalWallThickness)
+        topInnerWall.position = CGPoint(x: topInnerWallLength / 2, y: size.height * 0.75)
+        topInnerWall.physicsBody = SKPhysicsBody(rectangleOf: topInnerWall.size)
+        topInnerWall.physicsBody?.isDynamic = false
+        self.addChild(topInnerWall)
+    }
+    
+    func deleteWallsAndFinish() {
+        self.topWall.removeFromParent()
+        self.bottomWall.removeFromParent()
+        self.leftWall.removeFromParent()
+        self.rightWall.removeFromParent()
+        
+        self.topInnerWall.removeFromParent()
+        self.middleInnerWall.removeFromParent()
+        self.bottomInnerWall.removeFromParent()
+        
+        self.finishLine.removeFromParent()
+    }
+    
     // MARK: =====Delegate Functions=====
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        self.addSpriteBottle()
+    }
+    
     func didBegin(_ contact: SKPhysicsContact) {
         if contact.bodyA.node == finishLine || contact.bodyB.node == finishLine {
             playWinSequence()
+        }
+        
+        if contact.bodyA.node == player || contact.bodyB.node == player {
+            deletePlayer()
+            spawnPlayer()
         }
     }
     
