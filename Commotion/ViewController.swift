@@ -69,6 +69,12 @@ class ViewController: UIViewController {
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
         
+        if CMPedometer.isStepCountingAvailable(){
+            pedometer.queryPedometerData(from: startDate, to: endDate) {
+                [weak self] (data, error) in self?.handlePedometer(data, error: error)
+            }
+        }
+        
         goalSteps = max(defaults.float(forKey: "goal"), 100.0)
         goalSlider.setValue(goalSteps / 100.0, animated: false)
         updateStepsLeft()
@@ -117,9 +123,6 @@ class ViewController: UIViewController {
             pedometer.queryPedometerData(from: dayBefore, to: startDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
-            pedometer.queryPedometerData(from: startDate, to: endDate) {
-                [weak self] (data, error) in self?.handlePedometer(data, error: error)
-            }
         }
     }
     
@@ -130,7 +133,7 @@ class ViewController: UIViewController {
                 guard let self = self else { return }
                 if(yesterdaySteps == -1.0){
                     self.yesterdaySteps = steps.floatValue
-                    self.yesterdayLabel.text = "Steps taken yesterday: " +  String(Int(yesterdaySteps))
+                    self.yesterdayLabel.text = "Steps taken yesterday: " + String(Int(yesterdaySteps))
                     gameButton.isHidden = yesterdaySteps <= goalSteps
                 }
                 else{
