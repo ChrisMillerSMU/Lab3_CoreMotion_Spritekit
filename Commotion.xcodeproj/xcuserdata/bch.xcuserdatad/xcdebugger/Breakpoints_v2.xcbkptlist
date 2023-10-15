@@ -14,57 +14,10 @@
             filePath = "Commotion/ViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "136"
-            endingLineNumber = "136"
+            startingLineNumber = "152"
+            endingLineNumber = "152"
             landmarkName = "handlePedometer(_:error:)"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "0D87B70D-B4D6-4F7D-A564-4C1B2E7FC85E - a8e3847eca30a453"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Commotion.ViewController.handlePedometer(_: Swift.Optional&lt;__C.CMPedometerData&gt;, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
-                  moduleName = "Commotion"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bch/Documents/GitHub/Lab3_CoreMotion_Spritekit/Commotion/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "136"
-                  endingLineNumber = "136"
-                  offsetFromSymbolStart = "180">
-               </Location>
-               <Location
-                  uuid = "0D87B70D-B4D6-4F7D-A564-4C1B2E7FC85E - a8e3847eca30a453"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Commotion.ViewController.handlePedometer(_: Swift.Optional&lt;__C.CMPedometerData&gt;, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
-                  moduleName = "Commotion"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bch/Documents/GitHub/Lab3_CoreMotion_Spritekit/Commotion/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "136"
-                  endingLineNumber = "136"
-                  offsetFromSymbolStart = "308">
-               </Location>
-               <Location
-                  uuid = "0D87B70D-B4D6-4F7D-A564-4C1B2E7FC85E - 3db3665ad0bd8c67"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in Commotion.ViewController.handlePedometer(_: Swift.Optional&lt;__C.CMPedometerData&gt;, error: Swift.Optional&lt;Swift.Error&gt;) -&gt; ()"
-                  moduleName = "Commotion"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/bch/Documents/GitHub/Lab3_CoreMotion_Spritekit/Commotion/ViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "136"
-                  endingLineNumber = "136"
-                  offsetFromSymbolStart = "344">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
