@@ -12,7 +12,6 @@ import CoreMotion
 
 class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
-    //@IBOutlet weak var scoreLabel: UILabel!
     
     
     // MARK: Raw Motion Functions
@@ -31,17 +30,17 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         }
     }
     
+    //Using the roll and pitch attitude measurements from CMMotion Device to create gravity
     func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
         if let attitude = motionData?.attitude {
-            self.physicsWorld.gravity = CGVector(dx: CGFloat(5*attitude.roll), dy: CGFloat(5*attitude.pitch))
+            self.physicsWorld.gravity = CGVector(dx: CGFloat(5*attitude.roll), dy: CGFloat(-5*attitude.pitch))
             print("roll:", attitude.roll)
             print("Pitch:", attitude.pitch)
         }
     }
     
     // MARK: View Hierarchy Functions
-    let finishLine = SKSpriteNode()
-    
+    //Declaring wall variables
     let topWall = SKSpriteNode()
     let bottomWall = SKSpriteNode()
     let leftWall = SKSpriteNode()
@@ -51,73 +50,34 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     let middleInnerWall = SKSpriteNode()
     let topInnerWall = SKSpriteNode()
     
-    let levelLabel = SKLabelNode(fontNamed: "Chalkduster")
+    //Declaring other variables
     let player = SKSpriteNode(imageNamed: "larson")
     let gameplayAudio = SKAudioNode(fileNamed: "GameAudio")
+    let finishLine = SKSpriteNode()
 
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
         
         // Set the background color using RGBA values
         self.backgroundColor = SKColor(red: 2/255.0, green: 255/255.0, blue: 254/255.0, alpha: 1.0)
-        
-        self.levelLabel.text = "Level 1"
+
         // start motion for gravity
         self.startMotionUpdates()
         
-        // make sides to the screen
+        // Add the walls, finish, and player
         self.addFinishAtPoint(CGPoint(x: size.width * 0.25, y: size.height * 0.85))
-        
         self.spawnPlayer()
         self.addAllTheGameWalls()
         
+        //starts gameplay audio
         self.gameplayAudio.autoplayLooped = true
         self.addChild(gameplayAudio)
         self.gameplayAudio.run(SKAction.play())
         
-//        let timer = Timer.scheduledTimer(withTimeInterval: 10.0, repeats: false) { timer in
-//            self.playWinSequence()
-//        }
-        
-        
-        
     }
-    
-    override func willMove(from view: SKView) {
-        self.gameplayAudio.run(SKAction.pause())
-        self.gameplayAudio.removeFromParent()
-    }
-    
-        
+  
     // MARK: Create Sprites Functions
-    func createObstacleBlock(xPos:Double, yPos:Double) {
-        // Create obstacle sprite node
-        let obstacleBlock = SKSpriteNode(imageNamed: "block") // this is literally a block
-        
-        obstacleBlock.size = CGSize(
-            width: size.width*0.1,
-            height: size.height*0.1
-        )
-        
-        obstacleBlock.position = CGPoint(
-            x: xPos,
-            y: yPos
-        )
-        
-        // Set a y-constraint to ensure block stays on the y-level it's created on
-        let yConstraint = SKConstraint.positionY(SKRange(constantValue: yPos))
-        obstacleBlock.constraints = [yConstraint]
-        
-        obstacleBlock.physicsBody = SKPhysicsBody(
-            rectangleOf:obstacleBlock.size
-        )
-        obstacleBlock.physicsBody?.restitution = random(min: CGFloat(1.0), max: CGFloat(1.5))
-        obstacleBlock.physicsBody?.isDynamic = true
-        obstacleBlock.physicsBody?.contactTestBitMask = 0x00000001
-        obstacleBlock.physicsBody?.collisionBitMask = 0x00000001
-        obstacleBlock.physicsBody?.categoryBitMask = 0x00000001
-    }
-    
+    //function to create finish line at given point
     func addFinishAtPoint(_ point:CGPoint){
         
         finishLine.color = UIColor.red
@@ -135,13 +95,14 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
+    //spawns the player sprite in the bottom corner
     func spawnPlayer() {
         self.player.size = CGSize(width:size.width*0.1,height:size.width*0.1)
         self.player.position = CGPoint(x: size.width * 0.30, y: size.height * 0.15)
         self.player.physicsBody = SKPhysicsBody(rectangleOf:player.size)
+        
+        //Setting velocity to 0 on spawn and increased linear damping to make player slower
         player.physicsBody?.velocity = CGVector.zero
-//        player.physicsBody?.acceleration = CGVector(dx: 0, dy: 0)
-        player.physicsBody?.restitution = 0.01
         player.physicsBody?.linearDamping = 20
         player.physicsBody?.isDynamic = true
         player.physicsBody?.contactTestBitMask = 0x00000001
@@ -151,38 +112,43 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(player)
     }
     
-    // Code to remove the player node from the game
+    // Code to remove the player node from the parent
     func deletePlayer() {
         self.player.removeFromParent()
     }
     
+    //function after player hits finish line
     func playWinSequence() {
         self.deletePlayer()
         self.deleteWallsAndFinish()
         self.gameplayAudio.run(SKAction.pause())
         self.gameplayAudio.removeFromParent()
+        
+        //grab winners audio file and play it
         let winAudio = SKAudioNode(fileNamed: "WinAudio")
         winAudio.autoplayLooped = false
         self.addChild(winAudio)
         winAudio.run(SKAction.play())
         
+        //set background color to black
         self.backgroundColor = .black
         
+        //functions to scale image
         let scaleUpAction = SKAction.scale(to: 4.0, duration: 0.05) // Scale up to 2x in 0.5 seconds
-        
-        
         let scaleDownAction = SKAction.scale(to: 2.0, duration: 0.5) // Scale back to original size in 0.1 seconds
         
-        
+        //winner's image
         let backgroundImage = SKSpriteNode(imageNamed: "winnerScreen")
         backgroundImage.position = CGPoint(x: size.width / 2, y: size.height / 2)
         backgroundImage.xScale = 2.0 // Increase the width by a factor of 2
         backgroundImage.yScale = 2.0 // Increase the height by a factor of 2
         self.addChild(backgroundImage)
         
+        //animate the image and pause the win audio
         backgroundImage.run(scaleUpAction) {
             backgroundImage.run(scaleDownAction)
         }
+        winAudio.run(SKAction.pause())
         winAudio.removeFromParent()
     }
     
