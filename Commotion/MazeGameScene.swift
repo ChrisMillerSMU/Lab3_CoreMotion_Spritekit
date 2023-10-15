@@ -203,7 +203,6 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
             backgroundImage.run(scaleDownAction)
         }
         winAudio.run(SKAction.pause())
-        winAudio.removeFromParent()
     }
     
     func addAllTheGameWalls() {
