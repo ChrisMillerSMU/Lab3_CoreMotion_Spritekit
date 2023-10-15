@@ -10,6 +10,7 @@ import UIKit
 import SpriteKit
 import CoreMotion
 
+
 class GameScene: SKScene, SKPhysicsContactDelegate {
 
     //@IBOutlet weak var scoreLabel: UILabel!
@@ -27,7 +28,7 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     func handleMotion(_ motionData:CMDeviceMotion?, error:Error?){
         if let gravity = motionData?.gravity {
-            self.physicsWorld.gravity = CGVector(dx: CGFloat(9.8*gravity.x), dy: CGFloat(9.8*gravity.y))
+            self.physicsWorld.gravity = CGVector(dx: CGFloat(6*gravity.x), dy: CGFloat(6*gravity.y))
         }
     }
     
@@ -44,20 +45,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     
     override func didMove(to view: SKView) {
         physicsWorld.contactDelegate = self
-        backgroundColor = SKColor.white
+        
+        // Set the background color using RGBA values
+        backgroundColor = SKColor(red: 2/255.0, green: 255/255.0, blue: 254/255.0, alpha: 1.0)
         
         // start motion for gravity
         self.startMotionUpdates()
         
         // make sides to the screen
-        self.addSidesAndTop()
-        
-        // add some stationary blocks
-        self.addStaticBlockAtPoint(CGPoint(x: size.width * 0.1, y: size.height * 0.25))
-        self.addStaticBlockAtPoint(CGPoint(x: size.width * 0.9, y: size.height * 0.25))
-        
-        // add a spinning block
-        self.addBlockAtPoint(CGPoint(x: size.width * 0.5, y: size.height * 0.35))
+        self.addAllTheGameWalls()
         
         self.addSpriteBottle()
         
@@ -113,45 +109,68 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
 
     }
     
-    func addStaticBlockAtPoint(_ point:CGPoint){
-        let 🔲 = SKSpriteNode()
+    func addAllTheGameWalls() {
+        // Dimensions for the maze walls
+        let wallThickness = CGFloat(80)  // Wall thickness for most walls
+        let horizontalWallThickness = CGFloat(60)  // The wall thickness for horizontal walls
+
+        // Top wall
+        let topWall = SKSpriteNode(color: .black, size: CGSize(width: size.width, height: wallThickness))
+        topWall.position = CGPoint(x: size.width / 2, y: size.height - wallThickness / 2)
+        topWall.physicsBody = SKPhysicsBody(rectangleOf: topWall.size)
+        topWall.physicsBody?.isDynamic = false
+        self.addChild(topWall)
+
+        // Bottom wall
+        let bottomWall = SKSpriteNode(color: .black, size: CGSize(width: size.width, height: wallThickness))
+        bottomWall.position = CGPoint(x: size.width / 2, y: wallThickness / 2)
+        bottomWall.physicsBody = SKPhysicsBody(rectangleOf: bottomWall.size)
+        bottomWall.physicsBody?.isDynamic = false
+        self.addChild(bottomWall)
+
+        // Left wall
+        let leftWall = SKSpriteNode(color: .black, size: CGSize(width: wallThickness, height: size.height))
+        leftWall.position = CGPoint(x: wallThickness / 2, y: size.height / 2)
+        leftWall.physicsBody = SKPhysicsBody(rectangleOf: leftWall.size)
+        leftWall.physicsBody?.isDynamic = false
+        self.addChild(leftWall)
+
+        // Right wall
+        let rightWall = SKSpriteNode(color: .black, size: CGSize(width: wallThickness, height: size.height))
+        rightWall.position = CGPoint(x: size.width - wallThickness / 2, y: size.height / 2)
+        rightWall.physicsBody = SKPhysicsBody(rectangleOf: rightWall.size)
+        rightWall.physicsBody?.isDynamic = false
+        self.addChild(rightWall)
         
-        🔲.color = UIColor.red
-        🔲.size = CGSize(width:size.width*0.1,height:size.height * 0.05)
-        🔲.position = point
+        // Sizes for inner all passages
+        let horizontalWallThicknessThin = CGFloat(20) // Thin wall
+
+        // First (bottom) horizontal inner wall
+        let bottomHorizontalInnerWallLength = size.width * 0.4
+        let bottomHorizontalInnerWall = SKSpriteNode(color: .black, size: CGSize(width: bottomHorizontalInnerWallLength, height: horizontalWallThickness))
+        bottomHorizontalInnerWall.position = CGPoint(x: bottomHorizontalInnerWallLength / 2, y: size.height * 0.25)
+        bottomHorizontalInnerWall.physicsBody = SKPhysicsBody(rectangleOf: bottomHorizontalInnerWall.size)
+        bottomHorizontalInnerWall.physicsBody?.isDynamic = false
+        self.addChild(bottomHorizontalInnerWall)
         
-        🔲.physicsBody = SKPhysicsBody(rectangleOf:🔲.size)
-        🔲.physicsBody?.isDynamic = true
-        🔲.physicsBody?.pinned = true
-        🔲.physicsBody?.allowsRotation = true
+        // Second (middle) horizontal inner wall
+        let middleHorizontalInnerWallLength = size.width * 0.5
+        let middleHorizontalInnerWall = SKSpriteNode(color: .black, size: CGSize(width: middleHorizontalInnerWallLength, height: horizontalWallThicknessThin))
+        middleHorizontalInnerWall.position = CGPoint(x: size.width - middleHorizontalInnerWallLength / 2, y: size.height * 0.5)
+        middleHorizontalInnerWall.physicsBody = SKPhysicsBody(rectangleOf: middleHorizontalInnerWall.size)
+        middleHorizontalInnerWall.physicsBody?.isDynamic = false
+        self.addChild(middleHorizontalInnerWall)
         
-        self.addChild(🔲)
-        
+        // Third (top) horizontal inner wall
+        let topHorizontalInnerWallLength = size.width * 0.6
+        let topHorizontalInnerWall = SKSpriteNode(color: .black, size: CGSize(width: topHorizontalInnerWallLength, height: horizontalWallThickness))
+        topHorizontalInnerWall.position = CGPoint(x: topHorizontalInnerWallLength / 2, y: size.height * 0.75)
+        topHorizontalInnerWall.physicsBody = SKPhysicsBody(rectangleOf: topHorizontalInnerWall.size)
+        topHorizontalInnerWall.physicsBody?.isDynamic = false
+        self.addChild(topHorizontalInnerWall)
     }
-    
-    func addSidesAndTop(){
-        let left = SKSpriteNode()
-        let right = SKSpriteNode()
-        let top = SKSpriteNode()
-        
-        left.size = CGSize(width:size.width*0.1,height:size.height)
-        left.position = CGPoint(x:0, y:size.height*0.5)
-        
-        right.size = CGSize(width:size.width*0.1,height:size.height)
-        right.position = CGPoint(x:size.width, y:size.height*0.5)
-        
-        top.size = CGSize(width:size.width,height:size.height*0.1)
-        top.position = CGPoint(x:size.width*0.5, y:size.height)
-        
-        for obj in [left,right,top]{
-            obj.color = UIColor.red
-            obj.physicsBody = SKPhysicsBody(rectangleOf:obj.size)
-            obj.physicsBody?.isDynamic = true
-            obj.physicsBody?.pinned = true
-            obj.physicsBody?.allowsRotation = false
-            self.addChild(obj)
-        }
-    }
+
+
     
     // MARK: =====Delegate Functions=====
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
