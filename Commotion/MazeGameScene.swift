@@ -10,10 +10,24 @@ import UIKit
 import SpriteKit
 import CoreMotion
 
+extension SKAction {
+
+    // amplitude  - the amount the height will vary by, set this to 200 in your case.
+    // timePeriod - the time it takes for one complete cycle
+    // midPoint   - the point around which the oscillation occurs.
+
+    static func oscillation(amplitude a: CGFloat, timePeriod t: Double, midPoint: CGPoint) -> SKAction {
+        let action = SKAction.customAction(withDuration: t) { node, currentTime in
+            let displacement = a * sin(2 * .pi * currentTime / CGFloat(t))
+            node.position.x = midPoint.x + displacement
+        }
+
+        return action
+    }
+}
+
 class MazeGameScene: SKScene, SKPhysicsContactDelegate {
 
-    
-    
     // MARK: Raw Motion Functions
     let motion = CMMotionManager()
     
@@ -54,6 +68,8 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     let player = SKSpriteNode(imageNamed: "larson")
     let gameplayAudio = SKAudioNode(fileNamed: "GameAudio")
     let finishLine = SKSpriteNode()
+    // Create obstacle sprite node
+    let obstacleBlock = SKSpriteNode() // this is literally a block
 
     override func didMove(to view: SKView) {
         self.physicsWorld.contactDelegate = self
@@ -73,6 +89,13 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.gameplayAudio.autoplayLooped = true
         self.addChild(gameplayAudio)
         self.gameplayAudio.run(SKAction.play())
+        
+        createObstacleBlock(xPos: size.width/2, yPos: (size.height*0.85)/2)
+        self.addChild(obstacleBlock)
+        let oscillate = SKAction.oscillation(amplitude: 95,
+                                                timePeriod: 15,
+                                                  midPoint: obstacleBlock.position)
+        obstacleBlock.run(SKAction.repeatForever(oscillate))
         
     }
     
@@ -98,6 +121,33 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.addChild(finishLine)
 
     }
+    
+    func createObstacleBlock(xPos:Double, yPos:Double) {
+            obstacleBlock.size = CGSize(
+                width: size.width*0.1,
+                height: size.width*0.1
+            )
+
+            obstacleBlock.position = CGPoint(
+                x: xPos,
+                y: yPos
+            )
+        
+        obstacleBlock.color = .black
+
+            // Set a y-constraint to ensure block stays on the y-level it's created on
+            let yConstraint = SKConstraint.positionY(SKRange(constantValue: yPos))
+            obstacleBlock.constraints = [yConstraint]
+
+            obstacleBlock.physicsBody = SKPhysicsBody(
+                rectangleOf:obstacleBlock.size
+            )
+            obstacleBlock.physicsBody?.isDynamic = true
+            obstacleBlock.physicsBody?.affectedByGravity = false
+            obstacleBlock.physicsBody?.contactTestBitMask = 0x00000001
+            obstacleBlock.physicsBody?.collisionBitMask = 0x00000001
+            obstacleBlock.physicsBody?.categoryBitMask = 0x00000001
+        }
     
     //spawns the player sprite in the bottom corner
     func spawnPlayer() {
