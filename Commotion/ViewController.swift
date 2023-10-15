@@ -20,7 +20,7 @@ class ViewController: UIViewController {
         goalText.text = "Goal: \(Int(goalSteps)) steps"
         progress.setProgress(todaySteps / goalSteps, animated: true)
         let stepsLeft = goalSteps - todaySteps
-        DispatchQueue.main.async {
+        OperationQueue.main.addOperation {
             self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
         }
     }
@@ -56,7 +56,7 @@ class ViewController: UIViewController {
             endDate = Calendar.current.startOfDay(for: date)
         }
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.queryPedometerData(from: startDate, to: endDate) {
+            pedometer.queryPedometerData(from: dayBefore, to: startDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
         }
@@ -86,7 +86,7 @@ class ViewController: UIViewController {
     func handleActivity(_ activity:CMMotionActivity?)->Void{
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
-            DispatchQueue.main.async{
+            OperationQueue.main.addOperation{
                 if(unwrappedActivity.automotive){
                     self.activityLabel.text = "You are driving"
                 }
@@ -114,7 +114,7 @@ class ViewController: UIViewController {
         //separate out the handler for better readability
         
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.queryPedometerData(from: dayBefore, to: startDate) {
+            pedometer.queryPedometerData(from: startDate, to: endDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
         }
@@ -123,7 +123,7 @@ class ViewController: UIViewController {
     //pedometer handler
     func handlePedometer(_ pedData:CMPedometerData?, error:Error?) {
         if let steps = pedData?.numberOfSteps {
-            DispatchQueue.main.async { [weak self] in
+            OperationQueue.main.addOperation { [weak self] in
                 guard let self = self else { return }
                 if(yesterdaySteps == -1.0){
                     self.yesterdaySteps = steps.floatValue
@@ -131,7 +131,6 @@ class ViewController: UIViewController {
                     gameButton.isHidden = yesterdaySteps <= goalSteps
                 }
                 else{
-                    print("got here")
                     self.todaySteps = steps.floatValue
                     self.stepsLabel.text = "Steps taken today: " + String(Int(todaySteps))
                 }
