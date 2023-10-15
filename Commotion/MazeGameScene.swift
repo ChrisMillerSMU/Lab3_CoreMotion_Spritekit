@@ -94,6 +94,8 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     // Declaring other game objects and audio.
     let player = SKSpriteNode(imageNamed: "player") // The main character/player of the game.
     let gameplayAudio = SKAudioNode(fileNamed: "GameAudio") // Audio played during the game.
+    let winAudio = SKAudioNode(fileNamed: "WinAudio") // Instantiates a new audio node for the victory sound.
+
     let finishLine = SKSpriteNode() // The goal/end point of the game.
     let obstacleBlock = SKSpriteNode() // A dynamic obstacle block.
     
@@ -268,17 +270,14 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         // Removes the gameplay audio node from the scene.
         self.gameplayAudio.removeFromParent()
         
-        // Instantiates a new audio node for the victory sound.
-        let winAudio = SKAudioNode(fileNamed: "WinAudio")
-        
         // Ensures the victory audio doesn't loop after playing once.
-        winAudio.autoplayLooped = false
+        self.winAudio.autoplayLooped = false
         
         // Adds the victory audio node to the scene.
-        self.addChild(winAudio)
+        self.addChild(self.winAudio)
         
         // Plays the victory audio.
-        winAudio.run(SKAction.play())
+        self.winAudio.run(SKAction.play())
         
         // Changes the background color of the scene to black.
         self.backgroundColor = .black
@@ -422,7 +421,13 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     // Stops the gameplay audio.
     // This function is called by us when leaving the view controller.
     func stopTheAudio() {
+        // Stops the gameplay audio's if they are playing and/or are active
         self.gameplayAudio.run(SKAction.stop())
+        self.winAudio.run(SKAction.stop())
+        
+        // Removes the gameplay and win audio nodes from the scene.
+        self.gameplayAudio.removeFromParent()
+        self.winAudio.removeFromParent()
     }
     
     // MARK: =====Delegate Functions=====
