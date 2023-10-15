@@ -75,6 +75,10 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
         self.gameplayAudio.run(SKAction.play())
         
     }
+    
+    override func willMove(from view: SKView) {
+        self.gameplayAudio.run(SKAction.stop())
+    }
   
     // MARK: Create Sprites Functions
     //function to create finish line at given point
