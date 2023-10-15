@@ -21,7 +21,7 @@ class ViewController: UIViewController {
         progress.setProgress(todaySteps / goalSteps, animated: true)
         let stepsLeft = goalSteps - todaySteps
         OperationQueue.main.addOperation {
-            self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
+            self.toGoSteps.text = "Steps left: \(max(0, Int(stepsLeft)))"
         }
     }
     //MARK: =====UI Elements=====
@@ -36,6 +36,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var yesterdayLabel: UILabel!
     
     @IBAction func onInput(_ sender: UISlider) {
+        gameButton.isHidden = yesterdaySteps <= goalSteps
         goalSteps = Float(Int(sender.value)) * 100.0
         defaults.set(goalSteps, forKey:"goal")
         updateStepsLeft()
@@ -63,7 +64,6 @@ class ViewController: UIViewController {
         
         self.startActivityMonitoring()
         Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { _ in
-            print("fired")
             self.startPedometerMonitoring()
         }
         
@@ -112,7 +112,6 @@ class ViewController: UIViewController {
     // MARK: =====Pedometer Methods=====
     func startPedometerMonitoring(){
         //separate out the handler for better readability
-        
         if CMPedometer.isStepCountingAvailable(){
             pedometer.queryPedometerData(from: startDate, to: endDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
