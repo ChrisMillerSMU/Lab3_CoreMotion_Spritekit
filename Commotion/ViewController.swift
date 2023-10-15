@@ -88,8 +88,8 @@ class ViewController: UIViewController {
     func startPedometerMonitoring(){
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.startUpdates(from: Date(),
-                                   withHandler: handlePedometer)
+            self.pedometer.startUpdates(from: Date(),
+                                        withHandler: self.handlePedometer)
         }
     }
     

@@ -84,10 +84,10 @@
             </objects>
             <point key="canvasLocation" x="1503.2" y="336.88155922038982"/>
         </scene>
-        <!--Game View Controller-->
+        <!--Maze Game View Controller-->
         <scene sceneID="rB5-LK-c32">
             <objects>
-                <viewController id="uAs-2Q-GOu" customClass="GameViewController" customModule="Commotion" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="uAs-2Q-GOu" customClass="MazeGameViewController" customModule="Commotion" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Mv4-4J-m7v"/>
                         <viewControllerLayoutGuide type="bottom" id="9ra-ia-fff"/>
