@@ -1,11 +1,3 @@
-//
-//  ViewController.swift
-//  Commotion
-//
-//  Created by Eric Larson on 9/6/16.
-//  Copyright © 2016 Eric Larson. All rights reserved.
-//
-
 import UIKit
 import CoreMotion
 
@@ -22,10 +14,11 @@ class ViewController: UIViewController {
     var startDate:Date = Date()
     var endDate:Date = Date()
     
-    var totalSteps: Float = 0.0 {
+    var yesterdaySteps:Float = -1.0
+    var todaySteps:Float = 0.0 {
         willSet(newtotalSteps){
             DispatchQueue.main.async{
-                self.stepsLabel.text = "Steps: \(newtotalSteps)"
+                self.stepsLabel.text = "Steps: \(Int(newtotalSteps))"
             }
         }
         didSet{
@@ -35,8 +28,8 @@ class ViewController: UIViewController {
     func updateStepsLeft() {
         goalText.text = "Goal: \(Int(goalSteps)) steps"
         
-        progress.setProgress(totalSteps / goalSteps, animated: true)
-        let stepsLeft = goalSteps - totalSteps
+        progress.setProgress(todaySteps / goalSteps, animated: true)
+        let stepsLeft = goalSteps - todaySteps
         DispatchQueue.main.async {
             self.toGoSteps.text = "Steps left: \(Int(stepsLeft))"
         }
@@ -48,12 +41,9 @@ class ViewController: UIViewController {
     @IBOutlet weak var goalText: UILabel!
     @IBOutlet weak var toGoSteps: UILabel!
     @IBOutlet weak var progress: UIProgressView!
-    
-    @IBOutlet weak var isStill: UILabel!
-    @IBOutlet weak var isWalking: UILabel!
-    @IBOutlet weak var isRunning: UILabel!
-    @IBOutlet weak var isCycling: UILabel!
-    @IBOutlet weak var isDriving: UILabel!
+    @IBOutlet weak var gameButton: UIButton!
+    @IBOutlet weak var activityLabel: UILabel!
+    @IBOutlet weak var yesterdayLabel: UILabel!
     
     @IBAction func onInput(_ sender: UISlider) {
         goalSteps = Float(Int(sender.value)) * 100.0
@@ -76,7 +66,6 @@ class ViewController: UIViewController {
             endDate = Calendar.current.startOfDay(for: date)
         }
         
-        self.totalSteps = 0.0
         self.startActivityMonitoring()
         self.startPedometerMonitoring()
         
@@ -99,11 +88,24 @@ class ViewController: UIViewController {
         // unwrap the activity and disp
         if let unwrappedActivity = activity {
             DispatchQueue.main.async{
-                self.isStill.text = "You are" + (unwrappedActivity.stationary ? " " : " not ") + "still"
-                self.isWalking.text = "You are" + (unwrappedActivity.walking ? " " : " not ") + "walking"
-                self.isRunning.text = "You are" + (unwrappedActivity.running ? " " : " not ") + "running"
-                self.isCycling.text = "You are" + (unwrappedActivity.cycling ? " " : " not ") + "cycling"
-                self.isDriving.text = "You are" + (unwrappedActivity.automotive ? " " : " not ") + "driving"
+                if(unwrappedActivity.automotive){
+                    self.activityLabel.text = "You are driving"
+                }
+                else if(unwrappedActivity.cycling){
+                    self.activityLabel.text = "You are cycling"
+                }
+                else if(unwrappedActivity.running){
+                    self.activityLabel.text = "You are running"
+                }
+                else if(unwrappedActivity.walking){
+                    self.activityLabel.text = "You are walking"
+                }
+                else if(unwrappedActivity.stationary){
+                    self.activityLabel.text = "You are still"
+                }
+                else  if(unwrappedActivity.unknown){
+                    self.activityLabel.text = "Activity is unknown"
+                }
             }
         }
     }
@@ -115,16 +117,26 @@ class ViewController: UIViewController {
             pedometer.queryPedometerData(from: dayBefore, to: startDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
+            pedometer.queryPedometerData(from: startDate, to: endDate) {
+                [weak self] (data, error) in self?.handlePedometer(data, error: error)
+            }
         }
     }
     
-    //ped handler
+    //pedometer handler
     func handlePedometer(_ pedData:CMPedometerData?, error:Error?) {
         if let steps = pedData?.numberOfSteps {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
-                self.totalSteps = steps.floatValue
-                self.stepsLabel.text = String(self.totalSteps)
+                if(yesterdaySteps == -1.0){
+                    self.yesterdaySteps = steps.floatValue
+                    self.yesterdayLabel.text = "Steps taken yesterday: " +  String(Int(yesterdaySteps))
+                    gameButton.isHidden = yesterdaySteps <= goalSteps
+                }
+                else{
+                    self.todaySteps = steps.floatValue
+                    self.stepsLabel.text = "Steps taken today: " + String(Int(todaySteps))
+                }
             }
         }
     }
