@@ -88,8 +88,11 @@ class ViewController: UIViewController {
     func startActivityMonitoring(){
         // is activity is available
         if CMMotionActivityManager.isActivityAvailable(){
-            // update from this queue (should we use the MAIN queue here??.... )
-            self.activityManager.startActivityUpdates(to: OperationQueue.main, withHandler: self.handleActivity)
+            // update from this queue (NOT THE MAIN QUEUE)
+            self.activityManager.startActivityUpdates(
+                to: OperationQueue.init(),
+                withHandler: self.handleActivity
+            )
         }
         
     }
