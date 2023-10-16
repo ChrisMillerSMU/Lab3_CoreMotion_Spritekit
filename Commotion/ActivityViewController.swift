@@ -1,7 +1,7 @@
 import UIKit
 import CoreMotion
 
-class ViewController: UIViewController {
+class ActivityViewController: UIViewController {
     
     //MARK: =====class variables=====
     let activityManager = CMMotionActivityManager() // for walking, cycling, etc.
