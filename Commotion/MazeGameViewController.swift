@@ -6,6 +6,8 @@
 import UIKit
 import SpriteKit
 
+// ChatGPT helped us add comments to be more explicit throughout this code.
+
 // The `MazeGameViewController` manages the main game view.
 // This view controller contains the SpriteKit game scene where the maze gameplay occurs.
 class MazeGameViewController: UIViewController {

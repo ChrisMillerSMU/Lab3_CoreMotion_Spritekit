@@ -34,7 +34,7 @@ extension SKAction {
     }
 }
 
-
+// ChatGPT helped us add comments to be more explicit throughout this code.
 // MazeGameScene class defines the behavior and appearance of the game's main scene.
 class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     

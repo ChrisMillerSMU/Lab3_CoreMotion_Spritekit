@@ -1,6 +1,7 @@
 import UIKit
 import CoreMotion
 
+// ChatGPT helped us add comments to be more explicit throughout this code.
 class ActivityViewController: UIViewController {
     
     //MARK: =====class variables=====

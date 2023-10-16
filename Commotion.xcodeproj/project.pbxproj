@@ -13,6 +13,7 @@
 		B62ED3AA1D7F299D00B503DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B62ED3A91D7F299D00B503DF /* Assets.xcassets */; };
 		B62ED3AD1D7F299D00B503DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B62ED3AB1D7F299D00B503DF /* LaunchScreen.storyboard */; };
 		B68B9D4A1D7F6EA8002037A3 /* MazeGameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68B9D491D7F6EA8002037A3 /* MazeGameViewController.swift */; };
+		C0D0114F2ADCCC7D00127034 /* ActivityModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D0114E2ADCCC7D00127034 /* ActivityModel.swift */; };
 		C0D0900A2AD8DA3300C33F92 /* MazeGameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0D090092AD8DA3300C33F92 /* MazeGameScene.swift */; };
 		C0D090152ADC616C00C33F92 /* GameAudio.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C0D090132ADC616C00C33F92 /* GameAudio.mp3 */; };
 		C0D090162ADC616C00C33F92 /* WinAudio.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = C0D090142ADC616C00C33F92 /* WinAudio.mp3 */; };
@@ -27,6 +28,7 @@
 		B62ED3AC1D7F299D00B503DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B62ED3AE1D7F299D00B503DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B68B9D491D7F6EA8002037A3 /* MazeGameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MazeGameViewController.swift; sourceTree = "<group>"; };
+		C0D0114E2ADCCC7D00127034 /* ActivityModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityModel.swift; sourceTree = "<group>"; };
 		C0D090092AD8DA3300C33F92 /* MazeGameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MazeGameScene.swift; sourceTree = "<group>"; };
 		C0D090132ADC616C00C33F92 /* GameAudio.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = GameAudio.mp3; sourceTree = "<group>"; };
 		C0D090142ADC616C00C33F92 /* WinAudio.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = WinAudio.mp3; sourceTree = "<group>"; };
@@ -64,6 +66,7 @@
 			children = (
 				B62ED3A21D7F299D00B503DF /* AppDelegate.swift */,
 				B62ED3A41D7F299D00B503DF /* ActivityViewController.swift */,
+				C0D0114E2ADCCC7D00127034 /* ActivityModel.swift */,
 				C0D090092AD8DA3300C33F92 /* MazeGameScene.swift */,
 				B68B9D491D7F6EA8002037A3 /* MazeGameViewController.swift */,
 				B62ED3A61D7F299D00B503DF /* Main.storyboard */,
@@ -151,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0D0114F2ADCCC7D00127034 /* ActivityModel.swift in Sources */,
 				B62ED3A51D7F299D00B503DF /* ActivityViewController.swift in Sources */,
 				B68B9D4A1D7F6EA8002037A3 /* MazeGameViewController.swift in Sources */,
 				C0D0900A2AD8DA3300C33F92 /* MazeGameScene.swift in Sources */,
