@@ -18,9 +18,9 @@ class ViewController: UIViewController {
     
     // Updates the goal # text, the progress bar, and the progress bar text
     func updateStepsLeft() {
-        goalText.text = "Goal: \(Int(goalSteps)) steps" // Goal # text
-        progress.setProgress(todaySteps / goalSteps, animated: true) //  Updates progress bar
-        let stepsLeft = goalSteps - todaySteps // Calculate remaining
+        self.goalText.text = "Goal: \(Int(self.goalSteps)) steps" // Goal # text
+        self.progress.setProgress(self.todaySteps / self.goalSteps, animated: true) //  Updates progress bar
+        let stepsLeft = self.goalSteps - self.todaySteps // Calculate remaining
         OperationQueue.main.addOperation {
             self.toGoSteps.text = "Steps left: \(max(0, Int(stepsLeft)))" // Updates progress bar text
         }
@@ -37,10 +37,10 @@ class ViewController: UIViewController {
     
     // Runs when the slider is set to a value
     @IBAction func onInput(_ sender: UISlider) {
-        goalSteps = Float(Int(sender.value)) * 100.0 // Update goal variable with input
-        gameButton.isHidden = yesterdaySteps <= goalSteps // Show/hide button if testerday's steps are above/below new goal
-        defaults.set(goalSteps, forKey:"goal") // Saves the new goal into default for persistance
-        updateStepsLeft() // Run update steps left function
+        self.goalSteps = Float(Int(sender.value)) * 100.0 // Update goal variable with input
+        self.gameButton.isHidden = self.yesterdaySteps <= self.goalSteps // Show/hide button if testerday's steps are above/below new goal
+        self.defaults.set(self.goalSteps, forKey:"goal") // Saves the new goal into default for persistance
+        self.updateStepsLeft() // Run update steps left function
     }
     
     
@@ -50,20 +50,20 @@ class ViewController: UIViewController {
         
         // Gets the begining of the day before current
         if let date = Calendar.current.date(byAdding: .day, value: -1, to: Date()) {
-            dayBefore = Calendar.current.startOfDay(for: date)
+            self.dayBefore = Calendar.current.startOfDay(for: date)
         }
         // Gets begining of today
         if let date = Calendar.current.date(byAdding: .day, value: 0, to: Date()) {
-            startDate = Calendar.current.startOfDay(for: date)
+            self.startDate = Calendar.current.startOfDay(for: date)
         }
         // Gets the end of today
         if let date = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
-            endDate = Calendar.current.startOfDay(for: date)
+            self.endDate = Calendar.current.startOfDay(for: date)
         }
         
         // Due to being the first call to the pedometer, this will get and set the steps from yesterday
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.queryPedometerData(from: dayBefore, to: startDate) {
+            self.pedometer.queryPedometerData(from: self.dayBefore, to: self.startDate) {
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
         }
@@ -76,21 +76,23 @@ class ViewController: UIViewController {
         self.startActivityMonitoring()
         
         // Sets the goal steps to the default value with a minimum of 100 for persistance
-        goalSteps = max(defaults.float(forKey: "goal"), 100.0)
-        goalSlider.setValue(goalSteps / 100.0, animated: false) // Sets slider value to new goal value
-        gameButton.isHidden = yesterdaySteps <= goalSteps // Hides or shows the game button based on new goal
+        self.goalSteps = max(self.defaults.float(forKey: "goal"), 100.0)
+        self.goalSlider.setValue(self.goalSteps / 100.0, animated: false) // Sets slider value to new goal value
+        self.gameButton.isHidden = self.yesterdaySteps <= self.goalSteps // Hides or shows the game button based on new goal
         
         // Run update remaining with saved goal
-        updateStepsLeft()
+        self.updateStepsLeft()
     }
+    
+    let activityProcessingQueue = OperationQueue()
     
     // MARK: =====Activity Methods=====
     func startActivityMonitoring(){
         // is activity is available
         if CMMotionActivityManager.isActivityAvailable(){
-            // update from this queue (NOT THE MAIN QUEUE)
+            // update from this queue
             self.activityManager.startActivityUpdates(
-                to: OperationQueue.init(),
+                to: self.activityProcessingQueue,
                 withHandler: self.handleActivity
             )
         }
@@ -98,9 +100,9 @@ class ViewController: UIViewController {
     }
     
     func handleActivity(_ activity:CMMotionActivity?)->Void{
-        // unwrap the activity and disp
+        // unwrap the activity and dispatch
         if let unwrappedActivity = activity {
-            OperationQueue.main.addOperation{
+            DispatchQueue.main.async{
                 
                 // Run in hierarchy of priority. If driving is detected, it is displayed. Followed by cycling, running, etc.
                 
@@ -130,7 +132,7 @@ class ViewController: UIViewController {
     func startPedometerMonitoring(){
         //separate out the handler for better readability
         if CMPedometer.isStepCountingAvailable(){
-            pedometer.queryPedometerData(from: startDate, to: endDate) { // Gets data from start of today to end of today
+            self.pedometer.queryPedometerData(from: self.startDate, to: self.endDate) { // Gets data from start of today to end of today
                 [weak self] (data, error) in self?.handlePedometer(data, error: error)
             }
         }
@@ -142,15 +144,15 @@ class ViewController: UIViewController {
             OperationQueue.main.addOperation { [weak self] in
                 guard let self = self else { return }
                 // If this is the first time this has run, yesterdaySteps will still be at default, -1
-                if(yesterdaySteps == -1.0){ // If this is the first iteration, we need to set yesterday steps
+                if(self.yesterdaySteps == -1.0){ // If this is the first iteration, we need to set yesterday steps
                     self.yesterdaySteps = steps.floatValue // Update yesterday steps
                     self.yesterdayLabel.text = "Steps taken yesterday: " + String(Int(yesterdaySteps)) // And the label
-                    gameButton.isHidden = yesterdaySteps <= goalSteps // And show/hide the game button based on new steps
+                    self.gameButton.isHidden = self.yesterdaySteps <= self.goalSteps // And show/hide the game button based on new steps
                 }
                 else{ // Otherwise, we need to update the steps from today
                     self.todaySteps = steps.floatValue // Get new steps
-                    self.stepsLabel.text = "Steps taken today: " + String(Int(todaySteps)) // Update label
-                    updateStepsLeft() // Run update function
+                    self.stepsLabel.text = "Steps taken today: " + String(Int(self.todaySteps)) // Update label
+                    self.updateStepsLeft() // Run update function
                 }
             }
         }

@@ -43,6 +43,9 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
     // This object interfaces with the device's motion hardware.
     let motion = CMMotionManager()
     
+    // The queue for handling device motion
+    let deviceMotionQueue = OperationQueue()
+    
     // This function starts the process of receiving motion updates.
     // It configures the motion manager to periodically fetch and handle motion data.
     func startMotionUpdates(){
@@ -54,7 +57,7 @@ class MazeGameScene: SKScene, SKPhysicsContactDelegate {
             // The handler (`handleMotion`) processes these updates.
             self.motion.startDeviceMotionUpdates(
                 using: .xMagneticNorthZVertical,
-                to: OperationQueue.init(),  // Ensure motion updates aren't on the main queue
+                to: self.deviceMotionQueue,  // Ensure motion updates aren't on the main queue
                 withHandler: self.handleMotion
             )
         }
