@@ -45,7 +45,8 @@ class ActivityModel: NSObject {
         }
     }
     
-    
+    // Ensure that we have 1 operation queue by making it a variable
+    let operationQueue = OperationQueue()
     
     // Begins activity monitoring to determine the user's current motion (walking, cycling, etc.).
     //
@@ -54,7 +55,7 @@ class ActivityModel: NSObject {
     func startActivityMonitoring(completion: @escaping (CMMotionActivity?) -> Void) {
         
         // Start activity updates with the activity manager
-        self.activityManager.startActivityUpdates(to: OperationQueue()) { activity in
+        self.activityManager.startActivityUpdates(to: operationQueue) { activity in
             
             // Provide the motion activity data to the completion handler
             completion(activity)
